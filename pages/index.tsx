@@ -21,6 +21,7 @@ export default function Home() {
 
         const signer = provider.getSigner()
         const address = await signer.getAddress()
+        setWalletAddress(address)
 
         console.log(address)
         if (signer) {
@@ -34,7 +35,7 @@ export default function Home() {
     }
   }
 
-  async function addContractToPanel(contractToAddAddress: string, address: string) {
+  async function addContractToPanel(contractToAddAddress: string) {
     try {
       const { ethereum } = window
 
@@ -45,7 +46,7 @@ export default function Home() {
 
         const contract = new ethers.Contract(contractAddress, contractAbi, signer)
         
-        await contract.add(address, contractToAddAddress)
+        await contract.add(walletAddress, contractToAddAddress)
         
         console.log('contrato: ', contract)
       
@@ -65,34 +66,26 @@ export default function Home() {
   }, [])
 
   return (
-    <>
+    <div className="h-screen w-screen flex justify-center">
     {isAuthenticated ? (
-      <div className="flex-col mx-auto mt-24 max-w-screen justify-center">
-        <h1 className="text-3xl font-bold">Import contracts</h1>
-          <div className="block">
-            <label htmlFor="">Contrato que deseja adicionar</label>
+      <div className="flex-col h-fit py-16 px-16 mx-auto mt-24 max-w-screen justify-center bg-white shadow-xl rounded-xl">
+        <h1 className="text-3xl font-bold text-center">Import contracts</h1>
+          <div className="flex-col justify-center mt-12 mx-auto">
+            <label className="text-center justify-center" htmlFor="">Endereço do contrato que deseja adicionar</label>
             <input 
               value={contractAddressToAdd} 
               onChange={(e) => setContractAddressToAdd(e.target.value)}
               type="text" 
-              className="w-full h-full rounded-md max-w-[350px] py-3 px-6 bg-gray-200 hover:bg-gray-300 focus:bg-gray-300 transition duration-500" 
-              placeholder="0x9321odask..." 
-            />
-            <label htmlFor="">Endereço da sua carteira</label>
-            <input 
-              value={walletAddress} 
-              onChange={(e) => setWalletAddress(e.target.value)}
-              type="text" 
-              className="w-full h-full rounded-md max-w-[350px] py-3 px-6 bg-gray-200 hover:bg-gray-300 focus:bg-gray-300 transition duration-500" 
+              className="w-full h-full mt-2 rounded-md max-w-[350px] py-3 px-6 bg-gray-200 hover:bg-gray-300 focus:bg-gray-300 transition duration-500" 
               placeholder="0x9321odask..." 
             />
           </div>
       
           <button 
-            onClick={() => addContractToPanel(walletAddress, contractAddressToAdd)}
+            onClick={() => addContractToPanel(contractAddressToAdd)}
             type="button"
-            className="bg-yellow-500 py-3 px-6 rounded-md mt-12 text-white font-bold">
-              Import Contracts
+            className="bg-green-500 hover:bg-green-600 transition duration-500 py-3 px-6 rounded-md mt-12 text-white font-bold">
+              Import Contract
           </button>
         
       </div>
@@ -105,6 +98,6 @@ export default function Home() {
         </button>
       </div>
     )}
-    </>
+    </div>
   )
 }
